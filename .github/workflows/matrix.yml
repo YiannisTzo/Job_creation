@@ -5,16 +5,22 @@ jobs:
         continue-on-error: true
         strategy:
             matrix:
-                node-version: [12, 14, 16]
-                operating-system: [ubuntu-latest, windows-latest]
-        runs-on: ${{ matrix.operating-system }}
+                version: [12, 14, 16]
+                os: [ubuntu-latest, windows-latest]
+                include: 
+                    - version: 18
+                      os: ubuntu-latest
+                exclude:
+                    - version: 14
+                      os: windows-latest
+        runs-on: ${{ matrix.os }}
         steps:
             - name: Get code
               uses: actions/checkout@v3
             - name: Install NodeJS
               uses: actions/setup-node@v3
               with: 
-                node-version: ${{ matrix.node-version }}
+                node-version: ${{ matrix.version }}
             - name: Install Dependencies
               run: npm ci
             - name: build project
